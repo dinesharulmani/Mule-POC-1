@@ -1,0 +1,48 @@
+#%RAML 1.0
+title: mobility-outage-api
+version: v1
+baseUri: /api
+
+traits:
+  commonHeaders: !include traits/commonHeaders.raml
+
+types:
+  MobilityOutageRequest: !include dataTypes/MobilityOutageRequest.raml
+
+/mobility/outage:
+  post:
+    description: API to trigger mobility outage communication
+
+    is: [ commonHeaders ]
+
+    body:
+      application/json:
+        type: MobilityOutageRequest
+
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              {
+                "status": "SUCCESS",
+                "message": "Mobility outage communication processed successfully"
+              }
+
+      400:
+        body:
+          application/json:
+            example:
+              {
+                "status": "FAILED",
+                "message": "Invalid request payload"
+              }
+
+      500:
+        body:
+          application/json:
+            example:
+              {
+                "status": "ERROR",
+                "message": "Internal server error"
+              }

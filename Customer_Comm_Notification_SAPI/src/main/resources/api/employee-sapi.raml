@@ -1,0 +1,29 @@
+#%RAML 1.0
+title: SFMC System API
+version: v1
+baseUri: http://localhost:8081/api
+mediaType: application/json
+
+/token:
+  post:
+    displayName: Get SFMC Access Token
+    headers:
+      client_id:
+        type: string
+        required: true
+      client_secret:
+        type: string
+        required: true
+      traceId:
+        type: string
+        required: true
+      Content-Type:
+        type: string
+        required: true
+    responses:
+      200:
+        description: Token generated successfully
+      401:
+        description: Unauthorized
+      500:
+        description: Internal Server Error

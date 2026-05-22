@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="implementationFlow" doc:id="cc4125cb-8daf-4188-99e7-873862bb0f4d" >
+		<ee:transform doc:name="Transform Message" doc:id="47f687fb-229d-4a77-b01e-8c1c7d08047b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var eventTypeValue = 
+    if (lower(payload.eventType) == "outage occured") 
+        "outage over" 
+    else 
+        payload.eventType default "New"
+---
+{
+  communication: {
+    sourceId: "MOTS_ID",
+    destinationId: "SFMC",
+    domain: "Mobility",
+    isCPNIEmailReq: false,
+    isAccountSynchReq: true,
+    isNumberValReq: false,
+    isPreferenceReq: false,
+    isShortUrlReq: false,
+    customers: {
+      subCategory: payload.subCategory default "MOBILITY_OUTAGE_OCCURRED",
+      ban: payload.ban default "",
+      ctn: payload.ctn default [],
+      emailId: if (payload.primaryAccountEmail != null) [payload.primaryAccountEmail] else [],
+      fname: payload.fname default "Valued",
+      lname: payload.lname default "Customer",
+      serviceType: "wireless",
+      customerType: "I",
+      mode: "EMAIL",
+      priority: "MEDIUM",
+      eventSentTime: payload.eventSentTime default now(),
+      langPreference: "EN",
+      notificationInfo: {
+        eventType: eventTypeValue,
+        complexVal: [
+          { name: "eventId", value: payload.eventId default "" },
+          { name: "method", value: payload.method default "" },
+          { name: "outageStartTime", value: payload.outageStartTime default "" },
+          { name: "outageStartTimeinLocalTZ", value: payload.outageStartTimeinLocalTZ default "" },
+          { name: "gtocIncidentId", value: payload.gtocIncidentId default "" },
+          { name: "primaryCtn", value: payload.primaryCtn default "" },
+          { name: "restoralDateTimeWithYear", value: payload.restoralDateTimeWithYear default "" },
+          { name: "incidentId", value: (payload.incidentId joinBy ", ") default "" }
+        ]
+      }
+    }
+  }
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="96ad43b7-db56-43c8-99d6-8e3e46808cc9" message="#[payload]" />
+		<http:request doc:name="PAPI Request" doc:id="3837e3d7-5830-4429-8553-81bd310e26d4" config-ref="HTTP_Request_config" method="POST" path="/api/mobility/outage">
+			<http:headers ><![CDATA[#[%dw 2.0
+output application/java
+---
+{
+  clientID: "abc123",
+  clientSecret: "secret123",
+  "Content-Type": "application/json",
+  traceID: uuid()
+}]]]></http:headers>
+		</http:request>
+	</flow>
+</mule>

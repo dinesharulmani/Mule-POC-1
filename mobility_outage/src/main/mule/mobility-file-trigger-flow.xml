@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:file="http://www.mulesoft.org/schema/mule/file"
+      xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+      xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+        http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+
+    <http:request-config name="HTTP_Request_config" doc:name="HTTP Request config" doc:id="b0bb067b-53c8-42ce-91e1-70756477c6f0" >
+		<http:request-connection host="localhost" port="8082" />
+	</http:request-config>
+	<flow name="mobility-file-trigger-flow">
+        <!-- Trigger when a new or updated JSON file appears -->
+
+        <!-- Read the file content -->
+        <file:listener doc:name="On New or Updated File" doc:id="9fcbdb51-3d38-4c6a-8176-e59553e17be5" directory="C:\Users\LVishnuPriya\Documents\Test Files" outputMimeType="application/json" watermarkMode="CREATED_TIMESTAMP" recursive="false">
+			<scheduling-strategy >
+				<fixed-frequency frequency="10000"/>
+			</scheduling-strategy>
+		</file:listener>
+		<!-- [STUDIO:"Read"]<file:read doc:name="Read File" path="#[payload.path&#93;" outputMimeType="application/json"/> [STUDIO] -->
+
+        <!-- Transform the JSON into the required structure -->
+        <flow-ref doc:name="Flow Reference" doc:id="cb91d5e5-641a-4641-9bd0-64e2004e9656" name="implementationFlow"/>
+
+
+        <!-- Log the transformed output -->
+    
+</flow>
+
+    <!-- File configuration -->
+	<file:config name="File_Config" doc:name="File Config">
+        <file:connection workingDir="C:\Users\KanjojuCharan\Documents\Test files"/>
+    </file:config>
+
+</mule>

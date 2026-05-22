@@ -1,0 +1,199 @@
+#%RAML 1.0 DataType
+
+type: object
+
+example:
+  {
+    "communication": {
+      "sourceId": "<MOTS_ID>",
+      "destinationId": "SFMC",
+      "domain": "Mobility",
+      "isCPNIEmailReq": false,
+      "isAccountSynchReq": true,
+      "isNumberValReq": false,
+      "isPreferenceReq": false,
+      "isShortUrlReq": false,
+      "customers": {
+        "subCategory": "MOBILITY_OUTAGE_OCCURRED",
+        "ban": "352182028",
+        "ctn": ["3042801014"],
+        "emailId": ["MARYANN@BLEIFUSTIRE.COM"],
+        "fname": "Valued",
+        "lname": "Customer",
+        "serviceType": "wireless",
+        "customerType": "I",
+        "mode": "EMAIL",
+        "priority": "MEDIUM",
+        "eventSentTime": "2025-09-17T15:50:21Z",
+        "langPreference": "EN",
+        "notificationInfo": {
+          "eventType": "New",
+          "complexVal": [
+            {
+              "name": "eventId",
+              "value": "bde598c9-48eb-4589-8e3f-c669d1c7e8c3"
+            },
+            {
+              "name": "method",
+              "value": "Account"
+            },
+            {
+              "name": "outageStartTime",
+              "value": "1758117240000"
+            },
+            {
+              "name": "outageStartTimeinLocalTZ",
+              "value": "Wed 09/17/2025 08:54 AM CDT"
+            },
+            {
+              "name": "gtocIncidentId",
+              "value": "321278"
+            },
+            {
+              "name": "primaryCtn",
+              "value": "3042801014"
+            },
+            {
+              "name": "restoralDateTimeWithYear",
+              "value": "Wed 09/17/2025 09:00 PM CDT"
+            },
+            {
+              "name": "incidentId",
+              "value": "[\"2509162047360446\"]"
+            }
+          ]
+        }
+      }
+    }
+  }
+
+properties:
+  communication:
+    type: object
+    required: true
+
+    properties:
+      sourceId:
+        type: string
+        required: true
+
+      destinationId:
+        type: string
+        required: true
+        enum:
+          - SFMC
+
+      domain:
+        type: string
+        required: true
+        example: "Mobility"
+
+      isCPNIEmailReq:
+        type: boolean
+        required: true
+
+      isAccountSynchReq:
+        type: boolean
+        required: true
+
+      isNumberValReq:
+        type: boolean
+        required: true
+
+      isPreferenceReq:
+        type: boolean
+        required: true
+
+      isShortUrlReq:
+        type: boolean
+        required: true
+
+      customers:
+        type: object
+        required: true
+
+        properties:
+          subCategory:
+            type: string
+            required: true
+
+          ban:
+            type: string
+            required: true
+
+          ctn:
+            type: array
+            required: true
+            items: string
+
+          emailId:
+            type: array
+            required: true
+            items: string
+
+          fname:
+            type: string
+            required: true
+
+          lname:
+            type: string
+            required: true
+
+          serviceType:
+            type: string
+            required: true
+            enum:
+              - wireless
+
+          customerType:
+            type: string
+            required: true
+
+          mode:
+            type: string
+            required: true
+            enum:
+              - EMAIL
+
+          priority:
+            type: string
+            required: true
+            enum:
+              - LOW
+              - MEDIUM
+              - HIGH
+
+          eventSentTime:
+            type: datetime
+            required: true
+
+          langPreference:
+            type: string
+            required: true
+            enum:
+              - EN
+
+          notificationInfo:
+            type: object
+            required: true
+
+            properties:
+              eventType:
+                type: string
+                required: true
+
+              complexVal:
+                type: array
+                required: true
+
+                items:
+                  type: object
+
+                  properties:
+                    name:
+                      type: string
+                      required: true
+
+                    value:
+                      type: string
+                      required: true
